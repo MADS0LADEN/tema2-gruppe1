@@ -1,5 +1,7 @@
 import socket
 
+import driver
+
 try:
     import network
 
@@ -20,4 +22,6 @@ sock.bind((UDP_IP, UDP_PORT))
 
 while True:
     data, addr = sock.recvfrom(1024)
+    cmd, speed = data.decode().split(" ")
+    driver.execute(cmd, speed)
     print(f"{addr}: {data}")
