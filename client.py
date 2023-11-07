@@ -10,4 +10,4 @@ else:
 while True:
     inp = input("Send besked: ").encode()
     sock.sendto(inp, server_addr)
-    print(server_addr, inp.decode())
+    print(server_addr, len(inp), inp.decode())
