@@ -20,10 +20,12 @@ try:
 except:
     hostname = socket.gethostname()
     ip = socket.gethostbyname(hostname)
-    print("Not running on ESP, use this IP if external", ip, "otherwise use localhost")
+    print("Not running on ESP, use this IP if external", ip, hostname, "otherwise use localhost")
 
 while True:
     data, addr = sock.recvfrom(1024)
-    cmd, speed = data.decode().split(" ")
-    driver.execute(cmd, speed)
+    data = data.decode().split()
+    if len(data) == 2:
+        cmd, speed = data
+        driver.execute(cmd, speed)
     print(f"{addr}: {data}")
