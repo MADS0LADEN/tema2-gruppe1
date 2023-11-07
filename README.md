@@ -5,10 +5,10 @@ Rover
 
 ### Control Protocol
 Der sendes beskeder til roveren via UDP på denne måde:
-Fremad 100% = "forward 100"
-Bagud 80% = "backward 80"
-Højre 50% = "right 50" 
-Venstre 25% = "left 25" 
+- Fremad 100% = "forward 100"
+- Bagud 80% = "backward 80"
+- Højre 50% = "right 50" 
+- Venstre 25% = "left 25" 
 
 ### Frontend / Client
 Hjemmesiden til at sende styre input til roveren
