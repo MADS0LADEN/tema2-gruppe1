@@ -3,6 +3,7 @@ import socket
 import driver
 
 debug = True
+platform = None
 
 UDP_IP = "0.0.0.0"
 UDP_PORT = 7913
@@ -13,6 +14,7 @@ sock.bind((UDP_IP, UDP_PORT))
 try:
     import network
 
+    platform = "ESP"
     ap = network.WLAN(network.AP_IF) # create access-point interface
     ap.config(ssid="RoverNumber1")
     ap.config(password="qwerty123456")
@@ -20,6 +22,7 @@ try:
     ap.active(True)
     print("Send packets to this IP:", ap.ifconfig()[2]) # Show IP
 except Exception as e:
+    platform = "PC"
     hostname = socket.gethostname()
     ip = socket.gethostbyname(hostname)
     print(e, "= not on ESP, use this IP if external", ip, "otherwise use localhost")
@@ -31,7 +34,8 @@ while True:
         data = data.decode().split()
         if len(data) == 2:
             cmd, speed = data
-            driver.execute(cmd, speed)
+            if platform == "ESP":
+                driver.execute(cmd, speed)
         if debug:
             print(f"{addr} bytes={size}: {data}")
     except OSError as e:
