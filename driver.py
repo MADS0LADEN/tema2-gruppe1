@@ -1,7 +1,5 @@
-
-
 def parseSpeed(speed: str) -> int:
-    if speed.isnumeric():
+    if speed.isdigit():
         speed = int(speed)
         if speed <= 100:
             return speed
