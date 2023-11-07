@@ -2,6 +2,12 @@ import socket
 
 import driver
 
+UDP_IP = "0.0.0.0"
+UDP_PORT = 7913
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # UDP
+sock.bind((UDP_IP, UDP_PORT))
+
 try:
     import network
 
@@ -12,13 +18,9 @@ try:
     ap.active(True)
     print(ap.ifconfig()[2]) # Show IP
 except:
-    print("Not running on ESP just running the UDP server")
-
-UDP_IP = "0.0.0.0"
-UDP_PORT = 7913
-
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # UDP
-sock.bind((UDP_IP, UDP_PORT))
+    hostname = socket.gethostname()
+    ip = socket.gethostbyname(hostname)
+    print("Not running on ESP, use this IP if external", ip, "otherwise use localhost")
 
 while True:
     data, addr = sock.recvfrom(1024)
