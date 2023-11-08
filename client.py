@@ -1,5 +1,7 @@
 import socket
 
+debug = False
+
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 enpoint = input("Hvilken endhed vil du snakke med?\nESP / LOCAL?\n")
 if enpoint.lower() == "esp":
@@ -9,5 +11,7 @@ else:
 
 while True:
     inp = input("Send besked: ").encode()
+    if not debug and len(inp) == 0:
+        inp = "NAN".encode()
     sock.sendto(inp, server_addr)
     print(server_addr, len(inp), inp.decode())
