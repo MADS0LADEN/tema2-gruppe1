@@ -5,6 +5,8 @@ Rover
 
 ### Control Protocol
 Der sendes beskeder til roveren via UDP på denne måde:
+- Højre motor 10% = "rmotor 10"
+- Venstre motor 30% = "lmotor 30"
 - Fremad 100% = "forward 100"
 - Bagud 80% = "backward 80"
 - Højre 50% = "right 50" 
