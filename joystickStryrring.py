@@ -1,6 +1,6 @@
 from machine import Pin, ADC
 from time import sleep
-
+import socket
 #xAxis og yAxis modtager input fra joystik armen
 xAxis = ADC(Pin(1, Pin.IN), atten=ADC.ATTN_11DB)
 yAxis = ADC(Pin(2, Pin.IN), atten=ADC.ATTN_11DB)
@@ -12,6 +12,18 @@ forward = 0
 right = 0
 left = 0
 back = 0
+result = ""
+
+debug = True
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+enpoint = input("Hvilken endhed vil du snakke med?\nESP / LOCAL?\n")
+if enpoint.lower() == "esp":
+    server_addr = ("192.168.4.1", 7913)
+elif enpoint.lower() == "mads":
+    server_addr = ("192.168.1.130", 7913)
+else:
+    server_addr = ("127.0.0.1", 7913)
+
 
 while True:
     #xValue og yValue aflæser her joystikkets placering, og sender et signal tilbage i microvolt
@@ -92,7 +104,26 @@ while True:
     
     if yStatus == "down" and xStatus == "neutral":
         back = 30
+        
+      
+    #print(forward, left, right, back)
+    sleep(0.5)
+    li = [forward, left, right, back]
     
-    print(f"forward {forward} left {left} right {right} backward {back}")
-    #return(f"forward {forward} left {left} right {right} backward {back}")
-    sleep(0.3)
+    if forward > left and forward > right:
+        result = f"forward {forward}"
+    elif forward < left or forward < right:
+        result = f"lmotor {left} rmotor {right}"
+    elif forward <= 0 and left <= 0 and right <= 0:
+        result = f"forward {forward}"s
+        
+    #print(result)
+    
+    inp =result.encode()
+    if not debug and len(inp) == 0:
+        inp = "NAN".encode()
+    try:
+        sock.sendto(inp, server_addr)
+        print(server_addr, len(inp), inp.decode())
+    except OSError:
+        print("Not connected to Rover")
