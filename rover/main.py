@@ -1,5 +1,4 @@
 import socket
-
 import driver
 
 debug = True
@@ -10,7 +9,6 @@ UDP_PORT = 7913
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # UDP
 sock.bind((UDP_IP, UDP_PORT))
-
 try:
     import network
 
@@ -18,8 +16,10 @@ try:
     ap = network.WLAN(network.AP_IF) # create access-point interface
     ap.config(ssid="RoverNumber1", password="qwerty123456", authmode=3, max_clients=1)
     ap.active(True)
+    print(ap.ifconfig()[2])
     print("Send packets to this IP:", ap.ifconfig()[2]) # Show IP
 except Exception as e:
+    print(e)
     platform = "PC"
     hostname = socket.gethostname()
     ip = socket.gethostbyname(hostname)
@@ -27,11 +27,13 @@ except Exception as e:
 
 while True:
     data, addr = sock.recvfrom(32)
+    
     size = len(data)
     data = data.decode().split()
+    print(data)
     if data[0] == "0":
         driver.stop()
-    if len(data) == 2:
+    if size >= 2:
         cmd, speed = data
         if platform == "ESP":
             driver.execute(cmd, speed)
