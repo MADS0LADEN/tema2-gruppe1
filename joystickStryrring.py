@@ -1,6 +1,5 @@
 from machine import Pin, ADC
 from time import sleep
-import socket
 #xAxis og yAxis modtager input fra joystik armen
 xAxis = ADC(Pin(1, Pin.IN), atten=ADC.ATTN_11DB)
 yAxis = ADC(Pin(2, Pin.IN), atten=ADC.ATTN_11DB)
@@ -14,6 +13,7 @@ left = 0
 back = 0
 result = ""
 
+import socket
 debug = True
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 enpoint = input("Hvilken endhed vil du snakke med?\nESP / LOCAL?\n")
@@ -24,7 +24,7 @@ elif enpoint.lower() == "mads":
 else:
     server_addr = ("127.0.0.1", 7913)
 
-
+basespeed = 50
 while True:
     #xValue og yValue aflæser her joystikkets placering, og sender et signal tilbage i microvolt
     xValue = xAxis.read_u16()
@@ -64,13 +64,11 @@ while True:
     
     #straight ahead: no turning
     if yStatus == "up" and xStatus == "neutral":
-        left = 0
-        right = 0
-        back = 0
-        if forward == 0:
-            forward = 40
-        elif 40 <= forward < 100:
+        
+        forward = basespeed + 20
+        if 40 <= forward < 100:
             forward += 5
+        result = "forward " + str(forward)
     #neutral: the joystick is in the middle and every value is 0        
     if yStatus == "neutral" and xStatus == "neutral":
         forward = 0
@@ -83,47 +81,52 @@ while True:
         left = 0
         right = 20
         back = 0
+        result = "left " + str(right)
     #Direct right turn: the rover stops moving forward and swings right
     if yStatus == "neutral" and xStatus == "right":
         forward = 0
         left = 20
         right = 0
         back = 0
+        result = "right " + str(left)
     #Left swing: the rover turns left while moving forward
     if yStatus == "up" and xStatus == "left":
         forward = 0
-        left = 30
-        right = 50
+        left = basespeed
+        right = basespeed + 15
         back = 0
+        result = "left " + str(right)
     #Right swing: the rover turns right while moving forward
     if yStatus == "up" and xStatus == "right":
         forward = 0
-        left = 50
-        right = 30
+        left = basespeed + 15
+        right = basespeed
         back = 0
+        result = "right " + str(left)
     
     if yStatus == "down" and xStatus == "neutral":
         back = 30
-        
-      
-    #print(forward, left, right, back)
-    sleep(0.5)
-    li = [forward, left, right, back]
+        result = "forward 0"
     
-    if forward > left and forward > right:
-        result = f"forward {forward}"
-    elif forward < left or forward < right:
-        result = f"lmotor {left} rmotor {right}"
-    elif forward <= 0 and left <= 0 and right <= 0:
-        result = f"forward {forward}"s
-        
-    #print(result)
+    #print(forward, left, right, back)
+    sleep(0.2)
+    
+    if yStatus == "up" and xStatus == "neutral":
+        result = "forward " + str(forward)
+    if right == yStatus == "up" and xStatus == "right":
+        result = "left " + str(right)
+    if left == yStatus == "up" and xStatus == "left":
+        result = "right " + str(left)
+    if forward <= 0 and left <= 0 and right <= 0:
+        result = "forward 0"
+       
     
     inp =result.encode()
     if not debug and len(inp) == 0:
         inp = "NAN".encode()
     try:
         sock.sendto(inp, server_addr)
+        print(inp)
         print(server_addr, len(inp), inp.decode())
     except OSError:
         print("Not connected to Rover")
