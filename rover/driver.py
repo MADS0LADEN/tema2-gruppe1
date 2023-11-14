@@ -21,7 +21,6 @@ def runM2(DIR, speed):
     PWM_M2.duty_u16(calcDuty(speed))
 
 def parseSpeed(speed) -> int:
-    
     if speed.isdigit():
         speed = int(speed)
         if speed < 0:

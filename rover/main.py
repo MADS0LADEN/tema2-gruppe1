@@ -1,4 +1,5 @@
 import socket
+
 import driver
 
 debug = True
@@ -19,7 +20,6 @@ try:
     print(ap.ifconfig()[2])
     print("Send packets to this IP:", ap.ifconfig()[2]) # Show IP
 except Exception as e:
-    print(e)
     platform = "PC"
     hostname = socket.gethostname()
     ip = socket.gethostbyname(hostname)
@@ -33,7 +33,7 @@ while True:
     print(data)
     if data[0] == "0":
         driver.stop()
-    if size >= 2:
+    if size == 2:
         cmd, speed = data
         if platform == "ESP":
             driver.execute(cmd, speed)
