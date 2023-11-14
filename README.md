@@ -4,6 +4,9 @@ Rover
 ## TODO
 
 ### Control Protocol
+
+Der skal laves en ny løsning som gør at vi kan styre begge motor i samme pakke
+
 Der sendes beskeder til roveren via UDP på denne måde:
 - Højre motor 10% = "rmotor 10"
 - Venstre motor 30% = "lmotor 30"

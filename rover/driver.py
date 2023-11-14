@@ -21,7 +21,8 @@ def runM2(DIR, speed):
     PWM_M2.duty_u16(calcDuty(speed))
 
 def parseSpeed(speed) -> int:
-    if speed.isdigit():
+    try:
+        float(speed)
         speed = int(speed)
         if speed < 0:
             return 0
@@ -29,7 +30,7 @@ def parseSpeed(speed) -> int:
             return 100
         else:
             return speed
-    else:
+    except ValueError:
         return 0
 
 def forward(speed):
@@ -43,10 +44,8 @@ def right(speed):
 def left(speed):
     runM2(0, parseSpeed(speed))
 def rMotor(speed):
-    #print("rMotor", parseSpeed(speed))
     runM1(0, parseSpeed(speed))
 def lMotor(speed):
-    #print("lMotor", parseSpeed(speed))  
     runM2(0, parseSpeed(speed))
 
 def stop():

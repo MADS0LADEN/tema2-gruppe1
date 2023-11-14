@@ -17,7 +17,6 @@ try:
     ap = network.WLAN(network.AP_IF) # create access-point interface
     ap.config(ssid="RoverNumber1", password="qwerty123456", authmode=3, max_clients=1)
     ap.active(True)
-    print(ap.ifconfig()[2])
     print("Send packets to this IP:", ap.ifconfig()[2]) # Show IP
 except Exception as e:
     platform = "PC"
@@ -27,10 +26,8 @@ except Exception as e:
 
 while True:
     data, addr = sock.recvfrom(32)
-    
+    data = data.decode().split(" ")
     size = len(data)
-    data = data.decode().split()
-    print(data)
     if data[0] == "0":
         driver.stop()
     if size == 2:
@@ -39,4 +36,3 @@ while True:
             driver.execute(cmd, speed)
     if debug:
         print(f"{addr} bytes={size}: {data}")
-
