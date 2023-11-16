@@ -24,6 +24,13 @@ def send(msg):
         send("0")
 
 speed = 100
+trim_offset = 0
+
+def getSpeed(speed):
+    if 0 <= (speed - trim_offset) <= 100:
+        return trim_offset - speed
+    else:
+        return speed
 
 while running:
     # poll for events
@@ -40,10 +47,10 @@ while running:
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
         player_pos.y -= 300 * dt
-        send(f"{speed} {speed}")
+        send(f"{getSpeed(speed)} {getSpeed(speed)}")
     if keys[pygame.K_s]:
         player_pos.y += 300 * dt
-        send(f"-{speed} -{speed}")
+        send(f"-{getSpeed(speed)} -{getSpeed(speed)}")
     if keys[pygame.K_a]:
         player_pos.x -= 300 * dt
         send(f"{int(speed/2)} {int(speed/5)}")
