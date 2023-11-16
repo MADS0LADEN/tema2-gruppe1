@@ -40,20 +40,16 @@ while running:
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
         player_pos.y -= 300 * dt
-        send(f"rmotor {speed}")
-        send(f"lmotor {speed}")
+        send(f"{speed} {speed}")
     if keys[pygame.K_s]:
         player_pos.y += 300 * dt
-        send(f"rmotor {speed}")
-        send(f"lmotor {speed}")
+        send(f"-{speed} -{speed}")
     if keys[pygame.K_a]:
         player_pos.x -= 300 * dt
-        send(f"rmotor {int(speed/5)}")
-        send(f"lmotor {int(speed/2)}")
+        send(f"{int(speed/2)} {int(speed/5)}")
     if keys[pygame.K_d]:
         player_pos.x += 300 * dt
-        send(f"rmotor {int(speed/2)}")
-        send(f"lmotor {int(speed/5)}")
+        send(f"{int(speed/5)} {int(speed/2)}")
     if keys[pygame.K_e]:
         send("0")
 

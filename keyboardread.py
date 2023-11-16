@@ -1,6 +1,6 @@
-import keyboard
 from time import sleep
-import sys, os
+
+import keyboard
 
 left = 0.0
 right = 0.0
@@ -30,7 +30,7 @@ while True:
         result = "left " + str(speedR)
     if char=='s':
         left=left+0.1
-        result = "backward " + str(baseSpeed)
+        result = ("-"+baseSpeed, "-"+baseSpeed)
     if char=='f':
         right=right-0.1
     if char=='d':
@@ -43,9 +43,9 @@ while True:
     if char=='w':
         speedL = baseSpeed
         speedR = baseSpeed
-        result = "forward " + str(baseSpeed)
+        result = str(baseSpeed, baseSpeed)
     if char == 'e':
-        result = "forward 0"
+        result = "0"
     sleep(0.2)
     print(right, left)
     #dataKodet = data.encode()

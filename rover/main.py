@@ -28,11 +28,18 @@ while True:
     data, addr = sock.recvfrom(32)
     data = data.decode().split(" ")
     size = len(data)
-    if data[0] == "0":
-        driver.stop()
+    if debug:
+        print(f"{addr} bytes={size}: {data}")
+    if size == 1:
+        if data[0] == "0":
+            driver.stop()
+        elif data[0] != "0":
+            freq = 0
+            try:
+                freq = int(data[0])
+            except ValueError:
+                continue
     if size == 2:
         cmd, speed = data
         if platform == "ESP":
             driver.execute(cmd, speed)
-    if debug:
-        print(f"{addr} bytes={size}: {data}")
