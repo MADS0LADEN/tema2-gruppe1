@@ -4,13 +4,16 @@ Rover
 ## TODO
 
 ### Control Protocol
+
+Der skal laves en ny løsning som gør at vi kan styre begge motor i samme pakke 
+
 Der sendes beskeder til roveren via UDP på denne måde:
-- Højre motor 10% = "rmotor 10"
-- Venstre motor 30% = "lmotor 30"
-- Fremad 100% = "forward 100"
-- Bagud 80% = "backward 80"
-- Højre 50% = "right 50" 
-- Venstre 25% = "left 25" 
+- "STOP"                    = "0"
+- "Ligeud"                  = "100 100"
+- "Bagud"                   = "-100 -100"
+- "Ligeud lidt til højre"   = "100 80"
+- "Ligeud lidt til venstre" = "80 100"
+Første tal er venstre og andet er højre hjul
 
 ### Frontend / Client
 Hjemmesiden til at sende styre input til roveren
