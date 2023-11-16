@@ -58,5 +58,3 @@ while True:
         print(server_addr, len(inp), inp.decode())
     except OSError:
         print("Not connected to Rover")
-
-    

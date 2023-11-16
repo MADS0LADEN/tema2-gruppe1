@@ -5,7 +5,7 @@ Rover
 
 ### Control Protocol
 
-Der skal laves en ny løsning som gør at vi kan styre begge motor i samme pakke
+Der skal laves en ny løsning som gør at vi kan styre begge motor i samme pakke 
 
 Der sendes beskeder til roveren via UDP på denne måde:
 - "STOP"                    = "0"
