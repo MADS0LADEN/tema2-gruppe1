@@ -16,12 +16,14 @@ dt = 0
 
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 
+
 def send(msg):
     if len(msg) != 0:
         sock.sendto(msg.encode(), endpoint)
         print(time.time(), msg)
     else:
         send("0")
+
 
 speed = 100
 
