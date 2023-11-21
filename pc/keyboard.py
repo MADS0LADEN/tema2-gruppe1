@@ -27,6 +27,7 @@ def send(msg):
 
 speed = 100
 trim_offset = 0
+turn = 10
 
 
 def goStraight(speed):
@@ -61,6 +62,15 @@ def changeSpeed(var):
         last_execution = time.time_ns()
 
 
+def changeTurn(var):
+    global last_execution, turn
+    curr_time = time.time_ns()
+    if curr_time - last_execution >= 50_000_000:
+        turn = var
+        print(turn)
+        last_execution = time.time_ns()
+
+
 while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
@@ -82,10 +92,10 @@ while running:
         goStraight(int(f"-{speed}"))
     if keys[pygame.K_a]:
         player_pos.x -= 300 * dt
-        send(f"{int(speed/2)} {int(speed/5)}")
+        send(f"{int(speed-turn)} {int(speed)}")
     if keys[pygame.K_d]:
         player_pos.x += 300 * dt
-        send(f"{int(speed/5)} {int(speed/2)}")
+        send(f"{int(speed)} {int(speed-turn)}")
     if keys[pygame.K_e]:
         delayOffset(trim_offset + 1)
     if keys[pygame.K_q]:
@@ -94,6 +104,10 @@ while running:
         changeSpeed(speed + 1)
     if keys[pygame.K_DOWN]:
         changeSpeed(speed - 1)
+    if keys[pygame.K_LEFT]:
+        changeTurn(turn - 1)
+    if keys[pygame.K_RIGHT]:
+        changeTurn(turn + 1)
     if keys[pygame.K_SPACE]:
         send("0")
 
