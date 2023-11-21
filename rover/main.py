@@ -36,7 +36,7 @@ while True:
         elif data[0] != "0":
             freq = 0
             try:
-                freq = int(data[0])
+                freq = abs(int(data[0]))
             except ValueError:
                 continue
     if size == 2:
