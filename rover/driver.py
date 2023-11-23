@@ -22,8 +22,8 @@ def parseSpeed(speed) -> int:
 
 
 def setFreq(freq):
-    freq = int(abs(freq))
-    print(__name__, "WORKED!")
+    freq = abs(round(float(freq)))
+    freq = freq if freq > 10 else 10
     PWM_M1.freq(freq)
     PWM_M2.freq(freq)
 
