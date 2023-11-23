@@ -1,12 +1,16 @@
 from machine import Pin, ADC
 from time import sleep
 import socket
+import math
 
 po1 = ADC(Pin(3, Pin.IN), atten=ADC.ATTN_11DB)
 po2 = ADC(Pin(4, Pin.IN), atten=ADC.ATTN_11DB)
 
 en1 = Pin(1, Pin.OUT)
 en2 = Pin(2, Pin.OUT)
+button = Pin(5,Pin.IN, Pin.PULL_UP)
+
+pressCount = 0
 
 debug = True
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -18,7 +22,24 @@ elif enpoint.lower() == "mads":
 else:
     server_addr = ("127.0.0.1", 7913)
 
+
+def toProcent(data):
+    return math.floor(data/65536*100)
+    
 while True:
+                                     
+    buttonStatus= "not pressed"
+    
+    if button.value() == 0:
+         pressCount += 1
+         
+    if pressCount == 1:
+        buttonStatus = "pressed"
+    if pressCount == 2:
+        pressCount = 0
+             
+    print(buttonStatus)
+    
     en1.value(1)
     en2.value(1)
     
@@ -27,85 +48,10 @@ while True:
     
     print(po1Val,po2Val)
     sleep(0.2)
-    
-    #Venstre motor styrring
-    if po1Val <= 5000:
-        left = 90
-        lResult =str(left) 
-    if 5001 <= po1Val <= 10000:
-        left = 85
-        lResult =str(left)
-    if 10001 <= po1Val <= 15000:
-        left = 90
-        lResult =str(left)
-    if 15001 <= po1Val <= 20000:
-        left = 80
-        lResult =str(left)
-    if 20001 <= po1Val <= 25001:
-        left = 70
-        lResult =str(left)
-    if 25001 <= po1Val <= 30000:
-        left = 60
-        lResult =str(left)
-    if 30001 <= po1Val <= 35001:
-        left = 50
-        lResult =str(left)
-    if 35001 <= po1Val <= 40000:
-        left = 40
-        lResult =str(left)
-    if 40001 <= po1Val <= 45000:
-        left = 30
-        lResult =str(left)
-    if 45001 <= po1Val <= 50000:
-        left = 20
-        lResult =str(left)
-    if 50001 <= po1Val <= 55000:
-        left = 15
-        lResult =str(left)
-    if 55001 <= po1Val:
-        left = 0
-        lResult =str(left)
-        
-        
-    #Højre motor styrring
-    if po2Val <= 5000:
-        left = 90
-        rResult =str(left) 
-    if 5001 <= po2Val <= 10000:
-        left = 85
-        rResult =str(left)
-    if 10001 <= po2Val <= 15000:
-        left = 80
-        rResult =str(left)
-    if 15001 <= po2Val <= 20000:
-        left = 80
-        rResult =str(left)
-    if 20001 <= po2Val <= 25001:
-        left = 70
-        rResult =str(left)
-    if 25001 <= po2Val <= 30000:
-        left = 60
-        rResult =str(left)
-    if 30001 <= po2Val <= 35001:
-        left = 50
-        rResult =str(left)
-    if 35001 <= po2Val <= 40000:
-        left = 40
-        rResult =str(left)
-    if 40001 <= po2Val <= 45000:
-        left = 30
-        rResult =str(left)
-    if 45001 <= po2Val <= 50000:
-        left = 20
-        rResult =str(left)
-    if 50001 <= po2Val <= 55000:
-        left = 15
-        rResult =str(left)
-    if 55001 <= po2Val:
-        left = 0
-        rResult =str(left)
-        
-    result= lResult +" "+ rResult
+    if buttonStatus =="not pressed":
+        result = str(toProcent(po1Val)) + " " + str(toProcent(po2Val))
+    elif buttonStatus == "pressed":
+        result = str(-toProcent(po1Val)) + " " + str(-toProcent(po2Val))
 
     inp =result.encode()
     if not debug and len(inp) == 0:
