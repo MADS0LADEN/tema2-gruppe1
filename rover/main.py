@@ -34,11 +34,11 @@ while True:
         if data[0] == "0":
             driver.stop()
         elif data[0] != "0":
-            freq = 0
             try:
-                freq = int(data[0])
-            except ValueError:
-                continue
+                int(data[0])
+            except ValueError as e:
+                print(e)
+            driver.setFreq(data[0])
     if size == 2:
         cmd, speed = data
         if platform == "ESP":
