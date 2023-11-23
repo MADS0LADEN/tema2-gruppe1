@@ -8,6 +8,9 @@ po2 = ADC(Pin(4, Pin.IN), atten=ADC.ATTN_11DB)
 
 en1 = Pin(1, Pin.OUT)
 en2 = Pin(2, Pin.OUT)
+button = Pin(5,Pin.IN, Pin.PULL_UP)
+
+pressCount = 0
 
 debug = True
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -21,9 +24,22 @@ else:
 
 
 def toProcent(data):
-    return str(math.floor(data/65536*100))
+    return math.floor(data/65536*100)
     
 while True:
+                                     
+    buttonStatus= "not pressed"
+    
+    if button.value() == 0:
+         pressCount += 1
+         
+    if pressCount == 1:
+        buttonStatus = "pressed"
+    if pressCount == 2:
+        pressCount = 0
+             
+    print(buttonStatus)
+    
     en1.value(1)
     en2.value(1)
     
@@ -32,8 +48,10 @@ while True:
     
     print(po1Val,po2Val)
     sleep(0.2)
-    
-    result = toProcent(po1Val) + " " + toProcent(po2Val)
+    if buttonStatus =="not pressed":
+        result = str(toProcent(po1Val)) + " " + str(toProcent(po2Val))
+    elif buttonStatus == "pressed":
+        result = str(-toProcent(po1Val)) + " " + str(-toProcent(po2Val))
 
     inp =result.encode()
     if not debug and len(inp) == 0:
