@@ -1,11 +1,8 @@
 from time import sleep
-
 from machine import ADC, Pin
-
-# xAxis og yAxis modtager input fra joystik armen
+import socket
 xAxis = ADC(Pin(1, Pin.IN), atten=ADC.ATTN_11DB)
 yAxis = ADC(Pin(2, Pin.IN), atten=ADC.ATTN_11DB)
-# button modtager inputtet fra når man trykker på knappen
 button = Pin(3, Pin.IN, Pin.PULL_UP)
 xStatus = ""
 yStatus = ""
@@ -15,10 +12,8 @@ left = 0
 back = 0
 boost = 0
 result = ""
-
-import socket
-
 debug = True
+basespeed = 65
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 enpoint = input("Hvilken endhed vil du snakke med?\nESP / LOCAL?\n")
@@ -29,7 +24,6 @@ elif enpoint.lower() == "mads":
 else:
     server_addr = ("127.0.0.1", 7913)
 
-basespeed = 65
 while True:
     # xValue og yValue aflæser her joystikkets placering, og sender et signal tilbage i microvolt
     xValue = xAxis.read_u16()
@@ -43,26 +37,19 @@ while True:
     # når knappen bliver trykket på lyser lampen
     if buttonStatus == "pressed":
         pass
-
     # får de forskellige lamper til at lyse alt efter hvilken x- og y-værdi der er på joystikket.
     if xValue <= 600:
         xStatus = "left"
-
     if xValue >= 60000:
         xStatus = "right"
-
     if yValue <= 600:
         yStatus = "up"
-
     if yValue >= 60000:
         yStatus = "down"
-
     if 10000 <= xValue <= 50000:
         xStatus = "neutral"
-
     if 10000 <= yValue <= 50000:
         yStatus = "neutral"
-
     # straight ahead: no turning
     if yStatus == "up" and xStatus == "neutral":
         forward = 65 + boost
