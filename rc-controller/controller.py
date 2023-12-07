@@ -10,20 +10,28 @@ debug = True
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 server_addr = ("192.168.4.1", 7913)
 
+
 def getProcent(pot):
-    return round(pot.read_uv()/1000/3027*100)
+    return round(pot.read_uv() / 1000 / 3027 * 100)
+
 
 def getCmd(speed, steer):
-    if steer <= 50:
-        lspeed = speed-abs(50-steer)
-        rspeed = speed
+    if speed < 11:
+        speed = -abs(11 - speed) * 2
     else:
+        speed = int(((speed - 11) / (23 - 11)) * 100)
+    trim = round(speed - abs(50 - steer) / 3)
+    if steer <= 50:
+        rspeed = trim
         lspeed = speed
-        rspeed = speed-abs(50-steer)
+    else:
+        rspeed = speed
+        lspeed = trim
     return f"{lspeed} {rspeed}"
+
 
 while True:
     msg = getCmd(getProcent(SPEED), getProcent(STEER))
-    #print(msg)
+    # print(msg)
     sock.sendto(msg, server_addr)
     sleep(0.05)
