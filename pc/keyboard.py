@@ -3,6 +3,32 @@ import time
 
 import pygame
 
+DELAY_NS = 50_000_000
+
+
+class delay:
+    def __init__(self, value) -> None:
+        self.value = value
+        self.delay_ns = DELAY_NS
+        self.time_ns = time.time_ns()
+
+    def __repr__(self) -> int:
+        return self.value
+
+    def set(self, value):
+        now = time.time_ns()
+        if now - self.time_ns >= self.delay_ns:
+            self = value
+            print(self.var, value)
+            self.time_ns = time.time_ns()
+
+    def get(self):
+        return self
+
+    def getDelay(self):
+        return self.delay_ns
+
+
 # socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 endpoint = ("192.168.4.1", 7913)
@@ -47,7 +73,7 @@ last_execution = 0
 def delayOffset(var):
     global last_execution, trim_offset
     curr_time = time.time_ns()
-    if curr_time - last_execution >= 50_000_000:
+    if curr_time - last_execution >= DELAY_NS:
         trim_offset = var
         print(trim_offset)
         last_execution = time.time_ns()
@@ -56,7 +82,7 @@ def delayOffset(var):
 def changeSpeed(var):
     global last_execution, speed
     curr_time = time.time_ns()
-    if curr_time - last_execution >= 50_000_000:
+    if curr_time - last_execution >= DELAY_NS:
         speed = var
         print(speed)
         last_execution = time.time_ns()
@@ -65,7 +91,7 @@ def changeSpeed(var):
 def changeTurn(var):
     global last_execution, turn
     curr_time = time.time_ns()
-    if curr_time - last_execution >= 50_000_000:
+    if curr_time - last_execution >= DELAY_NS:
         turn = var
         print(turn)
         last_execution = time.time_ns()
