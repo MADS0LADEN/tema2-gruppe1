@@ -33,7 +33,9 @@ while True:
     if size == 1:
         if data[0] == "0":
             driver.stop()
-    if size == 2:
+        elif data[0] != "0":
+            driver.setFreq(data[0])
+    elif size == 2:
         cmd, speed = data
         if platform == "ESP":
             driver.execute(cmd, speed)
